@@ -1,0 +1,117 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package datos;
+
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+/**
+ *
+ * @author PC01
+ */
+public class CuentaCorriente {
+
+    double saldo, limDescubierto;
+    String nombre, dni;
+    Scanner scanner = new Scanner(System.in);
+
+    /* This code is used to create an object*/
+    public CuentaCorriente(String nombre, String dni) {
+        this.nombre = nombre;
+        this.dni = dni;
+        saldo = 0;
+        limDescubierto = -50;
+    }
+
+    /* This method check if is posible remove the money and make calculate the balance*/
+    public void retirarDinero() {
+        double dinero;
+        
+        try{
+            System.out.println("Indique la cantidad deseada para ingresar: ");
+            dinero = scanner.nextDouble();
+            scanner.nextLine();
+
+            if (dinero < 0 && saldo > limDescubierto) {
+                System.out.println("ERROR: La cantidad indicada no esta dentro de los parametros");
+            } else {
+                System.out.println("Operacion en curso...");
+                saldo = saldo - dinero;
+            }
+
+            System.out.println("Fin de la operación");
+            
+        }catch(InputMismatchException e){
+            System.out.println("ERROR: No has indicado un valor numerico");
+            scanner.nextLine();
+        }
+    }
+
+    /* This method add money to the account*/
+    public void ingresarDinero() {
+        double dinero = 0;
+        
+        try{
+            System.out.println("Indique la cantida a ingresar: ");
+            dinero = scanner.nextDouble();
+            scanner.nextLine();
+                
+            if(dinero < 0){
+                throw new IllegalArgumentException("La cantidad indicada es menor de 0");
+            }else{
+                saldo = saldo + dinero;
+
+                System.out.println("Ingreso en su cuenta de " + dinero + "€");
+            }
+        }catch(InputMismatchException e){
+            System.out.println("No has ingresado una cantidad numerica");
+            scanner.nextLine();
+        }catch(IllegalArgumentException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /* The method show the information about the account*/
+    public void mostrarInformacion() {
+        System.out.println("Cuenta corriente");
+        System.out.println("Nombre: " + nombre + " DNI: " + dni);
+        System.out.println("Saldo actual: " + saldo);
+        System.out.println("Limite descubierto: " + limDescubierto);
+    }
+
+    /* This is an optional method which change the information about account*/
+    public void cambiadorDatos() {
+        System.out.println("¿Desea modificar algo? S/N");
+        String respuesta = scanner.nextLine();
+
+        if (respuesta.toUpperCase().equals("S")) {
+            System.out.println("¿Que desea modificar?(Nombre/Limite descubierto)");
+            String aspecto = scanner.nextLine();
+
+            switch (aspecto.toUpperCase()) {
+
+                case "NOMBRE":
+                    System.out.println("Ingrese un nuevo nombre: ");
+                    nombre = scanner.nextLine();
+                    System.out.println("Cambios confirmados");
+                    break;
+
+                case "LIMITE DESCUBIERTO":
+                    System.out.println("Ingrese un nuevo limite descubierto: ");
+                    limDescubierto = scanner.nextDouble();
+                    scanner.nextLine();
+                    System.out.println("Cambios confirmados");
+                    break;
+
+                default:
+                    System.out.println("ERROR: recuerda que los valores DNI y saldo no se pueden modificar"
+                            + "debe de ponerse en contacto con su banco para ello");
+                    break;
+            }
+        }else{
+            System.out.println("Fin del programa");
+        }
+    }
+}
