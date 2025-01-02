@@ -1,0 +1,126 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package boletin7;
+
+import datos.CuentaCorriente;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ *
+ * @author PC01
+ */
+public class banco {
+
+    /**
+     * @param args the command line arguments
+     */
+    static Scanner scanner = new Scanner(System.in);
+    static int respuesta;
+    static boolean cuentaCreada = false;
+    
+    public static void main(String[] args) {
+        menu();
+    }
+    
+    /* This is the method which show a menu with the options*/
+    public static void menu(){
+        CuentaCorriente cuenta = new CuentaCorriente("xxx", "xxx");
+        System.out.println("Bienvenido a nuestra aplicacion!");
+        
+        do {
+            try{
+                System.out.println("¿Que operación desea realizar hoy?");
+                System.out.println("1. Retirada de dinero");
+                System.out.println("2. Ingreso de dinero");
+                System.out.println("3. Mostrar información");
+                System.out.println("4. Crear una cuenta");
+                System.out.println("5. Salir");
+                System.out.println("Ingrese una opcion: ");
+                respuesta = scanner.nextInt();
+                scanner.nextLine();
+
+                switch (respuesta) {
+                    case 1:
+                        if(verificadorCuenta()){
+                            cuenta.retirarDinero();
+                        }
+                        break;
+
+                    case 2:
+                        if(verificadorCuenta()){
+                            cuenta.ingresarDinero();
+                        }
+                        break;
+
+                    case 3:
+                        if(verificadorCuenta()){
+                            cuenta.mostrarInformacion();
+                            cuenta.cambiadorDatos();
+                        }
+                        break;
+
+                    case 4:
+                        cuenta = creadorCuenta(cuenta);
+                        cuentaCreada = true;
+                        break;
+                }
+                System.out.println("------------------------------------");
+            }catch(InputMismatchException e){
+                System.out.println("ERROR: INGRESE UNA DE LAS OPCIONES");
+                scanner.next();
+            }
+        } while (respuesta != 5);
+        System.out.println("Hasta la proxima!!");
+    }
+    
+    /**
+     * @param cuenta
+     * Method which make a new account
+     */
+    public static CuentaCorriente creadorCuenta(CuentaCorriente cuenta) {
+        String nombre, dni;
+        
+        System.out.println("Ingrese un nombre para su cuenta: ");
+        nombre = scanner.nextLine();
+
+        System.out.println("Ingrese un DNI: ");
+        dni = scanner.nextLine();
+        
+        if(verificadorDNI(dni)){
+            cuenta = new CuentaCorriente(nombre, dni);
+            return cuenta;
+        }else{
+            System.out.println("El DNI ingresado no cumple con los parametro pedidos (8 numeros y 1 letra)");
+            System.out.println("Operacion cancelada");
+            return cuenta;
+        }
+    }
+    
+    /* This method verify if the user has an account*/
+    private static boolean verificadorCuenta(){
+        if(cuentaCreada == false){
+            System.out.println("No hay una cuenta creada");
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
+    /**
+     @param dni
+     * Method which verify the ID
+     */
+    private static boolean verificadorDNI(String dni){
+        String regex = "[0-9]{8}[A-Z]";
+        
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher  = pattern.matcher(dni);
+        
+        return matcher.matches();
+    }
+}
